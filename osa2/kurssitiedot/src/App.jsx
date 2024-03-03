@@ -7,27 +7,32 @@ const Part = ({ part }) =>
     {part.name} {part.exercises}
   </p>
 
-const Content = ({ parts }) => 
-  <>
-    <Part
-      part={parts[0]} 
-    />
-    <Part
-      part={parts[1]} 
-    />
-    <Part
-      part={parts[2]} 
-    />
-    <Total
-      sum={parts[0].exercises + parts[1].exercises + parts[2].exercises}
-    />
-  </>
+const Content = ({ parts }) => {
+  const total = parts.reduce((sum, part) => sum + part.exercises, 0)
+
+  return (
+    <>
+      <Part
+        part={parts[0]} 
+      />
+      <Part
+        part={parts[1]} 
+      />
+      <Part
+        part={parts[2]} 
+      />
+      <Total
+        sum={total}
+      />
+    </>
+  )
+}
 
 const Course = ({ course }) => {
   return (
     <>
-    <Header course={course.name} />
-    <Content parts={course.parts} />
+      <Header course={course.name} />
+      <Content parts={course.parts} />
     </>
   )
 }
