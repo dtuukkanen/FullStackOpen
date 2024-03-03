@@ -12,18 +12,8 @@ const Content = ({ parts }) => {
 
   return (
     <>
-      <Part
-        part={parts[0]} 
-      />
-      <Part
-        part={parts[1]} 
-      />
-      <Part
-        part={parts[2]} 
-      />
-      <Total
-        sum={total}
-      />
+      {parts.map(part => <Part key={part.id} part={part} />)}
+      <Total sum={total} />
     </>
   )
 }
@@ -32,7 +22,7 @@ const Course = ({ course }) => {
   return (
     <>
       <Header course={course.name} />
-      <Content parts={course.parts} />
+      <Content key={course.id} parts={course.parts} />
     </>
   )
 }
