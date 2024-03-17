@@ -17,6 +17,12 @@ const App = () => {
       name: newName,
     }
 
+    if (persons.find(person => person.name === newName)) {
+      // console.log(`${newName} is already added to phonebook`)
+      alert(`${newName} is already added to phonebook`)
+      return
+    }
+
     setPersons(persons.concat(personObject))
     // console.log('button clicked', event.target)
   }
