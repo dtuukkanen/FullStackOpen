@@ -7,7 +7,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
 
   const handlePersonChange = (event) => {
-    console.log(event.target.value)
+    // console.log(event.target.value)
     setNewName(event.target.value)
   }
 
@@ -18,7 +18,7 @@ const App = () => {
     }
 
     setPersons(persons.concat(personObject))
-    console.log('button clicked', event.target)
+    // console.log('button clicked', event.target)
   }
 
   return (
