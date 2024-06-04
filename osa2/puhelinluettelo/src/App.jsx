@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 
+
+/* Element variables */
 const Filter = (props) => {
   return (
     <div>
@@ -41,6 +43,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
 
+  /* Load data from server */
   useEffect(() => {
     console.log('effect')
     axios
@@ -83,8 +86,17 @@ const App = () => {
       return
     }
 
+    /* Add person to server */
+    axios.post('http://localhost:3001/persons', personObject)
+      .then(response => {
+        setPersons(persons.concat(response.data))
+        setNewName('')
+        setNewNumber('')
+      })
+      .catch(error => {
+        console.log(error)
+      })
     setPersons(persons.concat(personObject))
-    // console.log('button clicked', event.target)
   }
 
   return (
