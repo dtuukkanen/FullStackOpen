@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import PersonServices from './services/persons'
 
 
 /* Element variables */
@@ -46,11 +46,10 @@ const App = () => {
   /* Load data from server */
   useEffect(() => {
     console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
+    PersonServices.getAll()
+      .then(returnedPersons => {
         console.log('promise fulfilled')
-        setPersons(response.data)
+        setPersons(returnedPersons)
       })
   }, [])
 
@@ -87,9 +86,9 @@ const App = () => {
     }
 
     /* Add person to server */
-    axios.post('http://localhost:3001/persons', personObject)
-      .then(response => {
-        setPersons(persons.concat(response.data))
+    PersonServices.create(personObject)
+      .then(newPerson => {
+        setPersons(persons.concat(newPerson))
         setNewName('')
         setNewNumber('')
       })
