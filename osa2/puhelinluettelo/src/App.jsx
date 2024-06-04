@@ -91,6 +91,8 @@ const App = () => {
         PersonServices.update(person.id, changedPerson)
           .then(returnedPerson => {
             setPersons(persons.map(p => p.id !== person.id ? p : returnedPerson))
+            setNewName('')
+            setNewNumber('')
           })
           .catch(error => {
             console.log(error)
