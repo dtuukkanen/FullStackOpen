@@ -27,11 +27,15 @@ const PersonForm = (props) => {
   )
 }
 
-const Persons = ({ personsToShow }) => {
+const Persons = ({ personsToShow, deletePerson }) => {
   return (
     <div>
       {personsToShow.map(person => (
-        <p key={person.name}>{person.name} {person.number}</p>
+        // Add button to delete person
+        <p key={person.name}>
+          {person.name} {person.number}
+          <button onClick={() => deletePerson(person.id)}>delete</button>
+        </p>
       ))}
     </div>
   )
@@ -98,6 +102,21 @@ const App = () => {
     setPersons(persons.concat(personObject))
   }
 
+  /* Delete person */
+  const deletePerson = (id) => {
+    const person = persons.find(person => person.id === id)
+    const result = window.confirm(`Delete ${person.name}?`)
+    if (result) {
+      PersonServices.deletePerson(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -119,7 +138,7 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons personsToShow={personsToShow} />
+      <Persons personsToShow={personsToShow} deletePerson={deletePerson}/>
     </div>
   )
 }
