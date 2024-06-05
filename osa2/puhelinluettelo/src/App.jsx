@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import PersonServices from './services/persons'
+import './index.css'
 
 
 /* Element variables */
@@ -41,11 +42,25 @@ const Persons = ({ personsToShow, deletePerson }) => {
   )
 }
 
+
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className="error">
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
 
   /* Load data from server */
   useEffect(() => {
@@ -107,9 +122,14 @@ const App = () => {
         setPersons(persons.concat(newPerson))
         setNewName('')
         setNewNumber('')
+        setErrorMessage(`Added '${personObject.name}`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
       })
       .catch(error => {
         console.log(error)
+        
       })
     setPersons(persons.concat(personObject))
   }
@@ -132,6 +152,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage} />
 
       <Filter 
         newFilter={newFilter} 
@@ -154,5 +175,6 @@ const App = () => {
     </div>
   )
 }
+
 
 export default App
