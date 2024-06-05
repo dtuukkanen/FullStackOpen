@@ -3,7 +3,6 @@ import PersonServices from './services/persons'
 import './index.css'
 
 
-/* Element variables */
 const Filter = (props) => {
   return (
     <div>
@@ -11,6 +10,7 @@ const Filter = (props) => {
     </div>
   )
 }
+
 
 const PersonForm = (props) => {
   return (
@@ -27,6 +27,7 @@ const PersonForm = (props) => {
     </form>
   )
 }
+
 
 const Persons = ({ personsToShow, deletePerson }) => {
   return (
@@ -108,6 +109,10 @@ const App = () => {
             setPersons(persons.map(p => p.id !== person.id ? p : returnedPerson))
             setNewName('')
             setNewNumber('')
+            setErrorMessage(`Updated ${personObject.name}`)
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
           })
           .catch(error => {
             console.log(error)
@@ -122,7 +127,7 @@ const App = () => {
         setPersons(persons.concat(newPerson))
         setNewName('')
         setNewNumber('')
-        setErrorMessage(`Added '${personObject.name}`)
+        setErrorMessage(`Added ${personObject.name}`)
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
@@ -142,6 +147,10 @@ const App = () => {
       PersonServices.deletePerson(id)
         .then(() => {
           setPersons(persons.filter(person => person.id !== id))
+          setErrorMessage(`Deleted ${person.name}`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
         })
         .catch(error => {
           console.log(error)
