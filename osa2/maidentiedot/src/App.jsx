@@ -9,25 +9,24 @@ const Filter = ({ newFilter, handleFilterChange }) => {
   )
 }
 
-const Countries = (countries) => {
-  const countriesToShow = countries.countries
-
-  if (countriesToShow.length > 10) {
+const Countries = ({ countries, setNewFilter }) => {
+  if (countries.length > 10) {
     return <p>Too many matches, specify another filter</p>
   }
 
-  if (countriesToShow.length > 1) {
-    return countriesToShow.map(country => {
+  if (countries.length > 1) {
+    return countries.map(country => {
       return (
         <div key={country.name.common}>
           {country.name.common}
+          <button onClick={() => setNewFilter(country.name.common)}>Show</button>
         </div>
       )
     })
   }
 
-  if (countriesToShow.length === 1) {
-    return countriesToShow.map(country => {
+  if (countries.length === 1) {
+    return countries.map(country => {
       return (
         <div key={country.name.common}>
           <h1>{country.name.common}</h1>
@@ -76,7 +75,7 @@ function App() {
     />
 
     
-    <Countries countries={countriesToShow} />
+    <Countries countries={countriesToShow} setNewFilter={setNewFilter} />
     </>
   )
 }
