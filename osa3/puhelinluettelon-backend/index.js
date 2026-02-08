@@ -3,6 +3,9 @@ const morgan = require("morgan");
 const app = express();
 const PORT = 3001;
 
+// Use static files from the "dist" directory
+app.use(express.static("dist"));
+
 let persons = [
   {
     id: 1,
