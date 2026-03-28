@@ -11,37 +11,37 @@ const phone_number = process.argv[4];
 
 const url = `mongodb+srv://dtuukkanen:${password}@puhelinluettelo-db.cs55hlv.mongodb.net/?appName=puhelinluettelo-db`
 
-async function main() {
-    mongoose.set('strictQuery', false)
-    await mongoose.connect(url, { family: 4 })
+mongoose.set('strictQuery', false)
+mongoose.connect(url, { family: 4 })
 
-    const personSchema = new mongoose.Schema({
-        name: String,
-        phone_number: String,
-    })
+const personSchema = new mongoose.Schema({
+    name: String,
+    phone_number: String,
+})
 
-    const Person = mongoose.model('Person', personSchema)
+const Person = mongoose.model('Person', personSchema)
 
-    if (process.argv.length === 3) {
-        console.log("phonebook:")
-        const persons = await Person.find({})
+if (process.argv.length === 3) {
+    console.log("phonebook:")
+    Person.find({}).then(persons => {
         persons.forEach(person => {
             console.log(person.name, person.phone_number);
         })
-    }
-
-    if (process.argv.length === 5) {
-        const person = new Person({
-            name: name,
-            phone_number: phone_number,
-        })
-
-        await person.save().then(result => {
-            console.log(`added ${name} number ${phone_number} to phonebook`)
-        })
-    }
-
-    mongoose.connection.close()
+        mongoose.connection.close()
+    })
 }
 
-main()
+if (process.argv.length === 5) {
+    const person = new Person({
+        name: name,
+        phone_number: phone_number,
+    })
+
+    person.save().then(result => {
+        console.log(`added ${name} number ${phone_number} to phonebook`)
+        mongoose.connection.close()
+    })
+}
+
+
+
