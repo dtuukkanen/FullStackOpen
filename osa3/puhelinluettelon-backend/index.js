@@ -83,6 +83,10 @@ app.post("/api/persons", (req, res) => {
   person.save().then(result => {
     console.log(`added ${body.name} number ${body.number} to phonebook`);
   })
+  .catch(error => {
+    console.error(error.message)
+    res.status(400).json({ error: error.message })
+  })
 });
 
 app.put("/api/persons/:id", (req, res, next) => {
