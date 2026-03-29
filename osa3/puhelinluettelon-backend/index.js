@@ -74,28 +74,22 @@ app.delete("/api/persons/:id", (req, res) => {
 });
 
 app.post("/api/persons", (req, res) => {
-  const body = req.body;
+  const body = req.body
 
   if (!body.name || !body.number) {
     return res.status(400).json({
       error: "name or number is missing",
-    });
+    })
   }
 
-  if (persons.find((person) => person.name === body.name)) {
-    return res.status(400).json({
-      error: "name must be unique",
-    });
-  }
-
-  const person = {
-    id: Math.floor(Math.random() * 1000),
+  const person = new Person({
     name: body.name,
-    number: body.number,
-  };
+    phone_number: body.number,
+  })
 
-  persons = persons.concat(person);
-  res.json(person);
+  person.save().then(result => {
+    console.log(`added ${body.name} number ${body.number} to phonebook`);
+  })
 });
 
 app.listen(PORT, () => {
