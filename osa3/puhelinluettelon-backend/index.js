@@ -1,6 +1,6 @@
 require('dotenv').config()
 const express = require("express");
-const Person = require('./models/person')
+const { Person, connectToDatabase } = require('./models/person')
 const morgan = require("morgan");
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -16,6 +16,15 @@ app.use(express.json());
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
+
+app.use(["/api", "/info"], async (req, res, next) => {
+  try {
+    await connectToDatabase()
+    next()
+  } catch (error) {
+    next(error)
+  }
+});
 
 app.get("/api/persons", (req, res, next) => {
   Person.find({})
@@ -120,6 +129,10 @@ const errorHandler = (error, req, res, next) => {
 
   if (error.name === "CastError") {
     return res.status(400).send({ error: "malformatted id" });
+  }
+
+  if (error.name === "MongooseServerSelectionError") {
+    return res.status(500).send({ error: "database connection failed" });
   }
 
   next(error);

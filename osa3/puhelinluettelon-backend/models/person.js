@@ -3,9 +3,26 @@ const mongoose = require('mongoose');
 mongoose.set('strictQuery', false)
 
 const url = process.env.MONGODB_URI
+let connectionPromise = null
 
-console.log('connecting to', url)
-mongoose.connect(url, { family: 4 })
+const connectToDatabase = async () => {
+    if (!url) {
+        throw new Error('MONGODB_URI is not defined')
+    }
+
+    if (mongoose.connection.readyState === 1) {
+        return mongoose.connection
+    }
+
+    if (!connectionPromise) {
+        connectionPromise = mongoose.connect(url, {
+            family: 4,
+            serverSelectionTimeoutMS: 30000,
+        })
+    }
+
+    return connectionPromise
+}
 
 const personSchema = new mongoose.Schema({
     name: {
@@ -34,4 +51,9 @@ personSchema.set('toJSON', {
     }
 })
 
-module.exports = mongoose.model('Person', personSchema)
+const Person = mongoose.model('Person', personSchema)
+
+module.exports = {
+    Person,
+    connectToDatabase,
+}
