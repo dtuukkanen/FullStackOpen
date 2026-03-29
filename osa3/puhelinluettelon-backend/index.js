@@ -77,13 +77,32 @@ app.post("/api/persons", (req, res) => {
 
   const person = new Person({
     name: body.name,
-    phone_number: body.number,
+    number: body.number,
   })
 
   person.save().then(result => {
     console.log(`added ${body.name} number ${body.number} to phonebook`);
   })
 });
+
+app.put("/api/persons/:id", (req, res, next) => {
+  const { name, number} = req.body
+
+  Person.findById(req.params.id)
+    .then(person => {
+      if (!person) {
+        return response.status(404).end()
+      }
+
+      person.name = name
+      person.number = number
+
+      return person.save().then((updatedPerson) => {
+        res.json(updatedPerson)
+      })
+    })
+    .catch(error => next(error))
+})
 
 // Middleware
 const unknownEndpoint = (req, res) => {
