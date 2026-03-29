@@ -42,6 +42,3 @@ if (process.argv.length === 5) {
         mongoose.connection.close()
     })
 }
-
-
-
