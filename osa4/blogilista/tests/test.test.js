@@ -94,7 +94,9 @@ describe('total likes', () => {
 })
 
 describe('favorite blog', () => {
-  const expected = listWithMultipleBlogs[2]
-  const result = listHelper.favoriteBlog(listWithMultipleBlogs)
-  assert.deepStrictEqual(result, expected)
+  test('of multiple blogs', () => {
+    const expected = listWithMultipleBlogs[2]
+    const result = listHelper.favoriteBlog(listWithMultipleBlogs)
+    assert.deepStrictEqual(result, expected)
+  })
 })
