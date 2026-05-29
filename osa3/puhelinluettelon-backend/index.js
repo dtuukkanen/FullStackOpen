@@ -1,32 +1,32 @@
 require('dotenv').config()
-const express = require("express");
+const express = require('express')
 const { Person, connectToDatabase } = require('./models/person')
-const morgan = require("morgan");
-const app = express();
-const PORT = process.env.PORT || 3001;
+const morgan = require('morgan')
+const app = express()
+const PORT = process.env.PORT || 3001
 
 // Use static files from the "dist" directory
-app.use(express.static("dist"));
+app.use(express.static('dist'))
 
-morgan.token("body", (req, res) => {
-  return JSON.stringify(req.body);
-});
+morgan.token('body', (req) => {
+  return JSON.stringify(req.body)
+})
 
-app.use(express.json());
+app.use(express.json())
 app.use(
-  morgan(":method :url :status :res[content-length] - :response-time ms :body")
-);
+  morgan(':method :url :status :res[content-length] - :response-time ms :body')
+)
 
-app.use(["/api", "/info"], async (req, res, next) => {
+app.use(['/api', '/info'], async (req, res, next) => {
   try {
     await connectToDatabase()
     next()
   } catch (error) {
     next(error)
   }
-});
+})
 
-app.get("/api/persons", (req, res, next) => {
+app.get('/api/persons', (req, res, next) => {
   Person.find({})
     .then(persons => {
       if (persons) {
@@ -36,10 +36,10 @@ app.get("/api/persons", (req, res, next) => {
       }
     })
     .catch(error => next(error))
-});
+})
 
-app.get("/info", (req, res, next) => {
-  const date = new Date();
+app.get('/info', (req, res, next) => {
+  const date = new Date()
 
   Person.find({})
     .then(persons => {
@@ -53,9 +53,9 @@ app.get("/info", (req, res, next) => {
       }
     })
     .catch(error => next(error))
-});
+})
 
-app.get("/api/persons/:id", (req, res, next) => {
+app.get('/api/persons/:id', (req, res, next) => {
   Person.findById(req.params.id)
     .then(person => {
       if (person) {
@@ -65,22 +65,22 @@ app.get("/api/persons/:id", (req, res, next) => {
       }
     })
     .catch(error => next(error))
-});
+})
 
-app.delete("/api/persons/:id", (req, res, next) => {
+app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndDelete(req.params.id)
-    .then(result => {
+    .then(() => {
       res.status(204).end()
     })
     .catch(error => next(error))
-});
+})
 
-app.post("/api/persons", (req, res) => {
+app.post('/api/persons', (req, res) => {
   const body = req.body
 
   if (!body.name || !body.number) {
     return res.status(400).json({
-      error: "name or number is missing",
+      error: 'name or number is missing',
     })
   }
 
@@ -89,22 +89,22 @@ app.post("/api/persons", (req, res) => {
     number: body.number,
   })
 
-  person.save().then(result => {
-    console.log(`added ${body.name} number ${body.number} to phonebook`);
+  person.save().then(() => {
+    console.log(`added ${body.name} number ${body.number} to phonebook`)
   })
-  .catch(error => {
-    console.error(error.message)
-    res.status(400).json({ error: error.message })
-  })
-});
+    .catch(error => {
+      console.error(error.message)
+      res.status(400).json({ error: error.message })
+    })
+})
 
-app.put("/api/persons/:id", (req, res, next) => {
-  const { name, number} = req.body
+app.put('/api/persons/:id', (req, res, next) => {
+  const { name, number } = req.body
 
   Person.findById(req.params.id)
     .then(person => {
       if (!person) {
-        return response.status(404).end()
+        return res.status(404).end()
       }
 
       person.name = name
@@ -119,28 +119,28 @@ app.put("/api/persons/:id", (req, res, next) => {
 
 // Middleware
 const unknownEndpoint = (req, res) => {
-  res.status(404).send({ error: "unknown endpoint" });
-};
+  res.status(404).send({ error: 'unknown endpoint' })
+}
 
-app.use(unknownEndpoint);
+app.use(unknownEndpoint)
 
 const errorHandler = (error, req, res, next) => {
-  console.error(error.message);
+  console.error(error.message)
 
-  if (error.name === "CastError") {
-    return res.status(400).send({ error: "malformatted id" });
+  if (error.name === 'CastError') {
+    return res.status(400).send({ error: 'malformatted id' })
   }
 
-  if (error.name === "MongooseServerSelectionError") {
-    return res.status(500).send({ error: "database connection failed" });
+  if (error.name === 'MongooseServerSelectionError') {
+    return res.status(500).send({ error: 'database connection failed' })
   }
 
-  next(error);
-};
+  next(error)
+}
 
-app.use(errorHandler);
+app.use(errorHandler)
 
 // Start listening port
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+  console.log(`Server is running on port ${PORT}`)
+})
